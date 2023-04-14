@@ -104,7 +104,7 @@ function startQuiz() {
   showQuestion();
 }
 
-// 表示するクイズ
+// 表示する質問
 function showQuestion() {
   // 初期値で設定したanswers-buttonを削除
   resetState();
@@ -115,28 +115,64 @@ function showQuestion() {
   // 質問をいれる箇所にはクイズの番号と現在の質問の内容
   questionElement.innerHTML = questionNo + "." + currentQuestion.question;
 
-  //
+  //表示する回答
   currentQuestion.answers.forEach((answer) => {
     // 新しくボタンタグを生成
     const button = document.createElement("button");
-    // 配列の要素一つ一つのテキストを入力
+    // その新しく生成したbuttonにテキストを入力
     button.innerHTML = answer.text;
     // ボタンタグにクラスリストを追加
     button.classList.add("btn");
     // 子要素の末尾に追加(appendChild)
     answerButtons.appendChild(button);
     // console.log(answerButtons);
+    // console.log(button.dataset);
+
+    //answer.correctの値がtrueの答えだけ、detasetにtrueを入れる
+    // つまり、正しい回答にしかdatasetは設定されていない
+    if (answer.correct) {
+      // correct属性に正、負正解をいれる
+      button.dataset.correct = answer.correct;
+    }
+
+    button.addEventListener("click", selectAnswer);
   });
 }
 
 function resetState() {
-  // 次へボタンを非表示
+  // [次へ]ボタンを非表示
   nextButton.style.display = "none";
   //各要素（各質問）について繰り返し削除処理をする
   while (answerButtons.firstChild) {
     // 要素を削除(removeChild)
     answerButtons.removeChild(answerButtons.firstChild);
   }
+}
+
+function selectAnswer(e) {
+  // クリックされたボタン要素を変数に格納
+  const selectBtn = e.target;
+  //クラスを追加するようのbooleanを定義する
+  const isCorrect = selectBtn.dataset.correct === "true";
+  //   選択されたボタンのデータセットがtrueかfalseかでクラスを追加する
+  if (isCorrect) {
+    selectBtn.classList.add("correct");
+  } else {
+    selectBtn.classList.add("incorrect");
+  }
+
+  //  回答を一回しかできないようにする処理
+  //   button配列を一つずつ繰り返す
+  Array.from(answerButtons.children).forEach((button) => {
+    //間違えた回答をした場合、同時に正解も表示する
+    if (button.dataset.correct === "true") {
+      button.classList.add("correct");
+    }
+    // 非活性（ボタンを押せなくする）
+    button.disabled = true;
+  });
+
+  nextButton.style.display = "block";
 }
 
 // 実行

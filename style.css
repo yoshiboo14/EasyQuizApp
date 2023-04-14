@@ -54,9 +54,14 @@ body {
   transition: all 0.3s;
 }
 
-.btn:hover {
+/* not()でホバーしなくなったら　別のcssを当てる*/
+/*  */
+.btn:hover:not([disabled]) {
   background-color: #222;
   color: #fff;
+}
+.btn:disabled {
+  cursor: no-drop;
 }
 
 #next-btn {
@@ -71,4 +76,13 @@ body {
   margin: 20px auto 0;
   border-radius: 4px;
   cursor: pointer;
+}
+
+/* btnのonClickイベントのstyle */
+.correct {
+  background-color: #9aeabc;
+}
+
+.incorrect {
+  background-color: #ff9393;
 }
