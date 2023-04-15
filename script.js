@@ -26,7 +26,7 @@ const questions = [
     answers: [
       {
         text: "お酢",
-        correct: true,
+        correct: false,
       },
       {
         text: "砂糖",
@@ -69,7 +69,7 @@ const questions = [
     answers: [
       {
         text: "お経にリズムをつけるため",
-        correct: true,
+        correct: false,
       },
       {
         text: "亡くなった人が天国にいけるようにと祈るため",
@@ -157,6 +157,8 @@ function selectAnswer(e) {
   //   選択されたボタンのデータセットがtrueかfalseかでクラスを追加する
   if (isCorrect) {
     selectBtn.classList.add("correct");
+    // スコアを上げる
+    score++;
   } else {
     selectBtn.classList.add("incorrect");
   }
@@ -174,6 +176,34 @@ function selectAnswer(e) {
 
   nextButton.style.display = "block";
 }
+
+// スコア表示の関数
+function showScore() {
+  resetState();
+  questionElement.innerHTML = `あなたの点数は ${score} / ${questions.length} です。`;
+  nextButton.innerHTML = "もう一度チャレンジ";
+  nextButton.style.display = "block";
+}
+
+// 次へボタンの中身の処理
+function handleNextButton() {
+  currentQuestionIndex++;
+  if (currentQuestionIndex < questions.length) {
+    showQuestion();
+  } else {
+    showScore();
+  }
+}
+
+// 次へボタンを押したときの処理
+nextButton.addEventListener("click", () => {
+  // 質問番号が質問の数（4つ）より少ない場合
+  if (currentQuestionIndex < questions.length) {
+    handleNextButton();
+  } else {
+    startQuiz();
+  }
+});
 
 // 実行
 startQuiz();
